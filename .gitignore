@@ -1,0 +1,27 @@
+# --- Seguridad y Credenciales (Prioridad 1) ---
+.env
+profiles.yml
+*.pem
+*.key
+
+# --- Entorno Virtual y Python ---
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# --- dbt (Build & Logs) ---
+target/
+dbt_packages/
+dbt_modules/
+logs/
+
+# --- Sistema Operativo y Editores ---
+.DS_Store
+.vscode/
+.idea/
+*.swp

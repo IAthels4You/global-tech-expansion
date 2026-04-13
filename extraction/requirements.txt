@@ -1,0 +1,14 @@
+# --- Manipulación de Datos ---
+pandas
+
+# --- Conexión a APIs (Banco Mundial) ---
+requests
+
+# --- Conectividad con Snowflake ---
+snowflake-connector-python[pandas]
+
+# --- Gestión de Variables de Entorno (Seguridad) ---
+python-dotenv
+
+# --- Validación (Opcional pero recomendado para Data Contracts) ---
+pydantic
