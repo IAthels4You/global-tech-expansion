@@ -41,10 +41,10 @@ global-tech-expansion/
 
 ## Technical Documentation Stack
 
-1. **Global_Expansion_Technical_Roadmap_v1**: Detailed master implementation plan by phases (Ingestion, Infrastructure, Modeling, and Analytics).
-2. **Global_Expansion_Architecture_Justification_v1**: Technical justification of the stack (Snowflake, dbt, Python) and Medallion architecture design.
-3. **Global_Expansion_Ingestion_Spec_v1**: Technical specification of endpoints, communication protocols (SDMX-JSON), and API contracts.
-4. **Global_Expansion_Dependency_Rationale_v1**: Rationale behind project libraries (Pydantic, Snowpark, Prophet) and their role in the pipeline.
-5. **Global_Expansion_Indicators_Analysis_v1**: Strategic justification for the selection of macroeconomic and financial indicators.
-6. **Global_Expansion_Data_Sources_Technical_Sheet_v1**: Technical data sheet of origin sources (World Bank, UNESCO, OECD) and their metadata.
-7. **Global_Expansion_Glossary_v1**: Semantic definition of indicators to ensure a Single Source of Truth (SSOT).
+1. **Global_Expansion_Technical_Roadmap_v1**: Master implementation plan. It outlines the project lifecycle across five phases, from API ingestion to predictive AI modeling.
+2. **Global_Expansion_Architecture_Justification_v1**: Technical defense of the system design. It justifies the use of Medallion Architecture and Pydantic Data Contracts based on industry standards.
+3. **Global_Expansion_Ingestion_Spec_v1**: API technical documentation. It defines endpoints, Gzip/SDMX protocols, and the normalization standards for World Bank, UNESCO, and OECD data.
+4. **Global_Expansion_Dependency_Rationale_v1**: Software stack justification. It explains the strategic role of libraries like Snowpark for cloud processing and Prophet for economic forecasting.
+5. **Global_Expansion_Indicators_Analysis_v1**: Strategic variable selection. It details the logic behind transforming raw macroeconomic data into normalized decision metrics for the Opportunity Index.
+6. **Global_Expansion_Data_Sources_Technical_Sheet_v1**: Data provider inventory. It validates the reliability and global standardization of the World Bank, UNESCO, and OECD as primary sources.
+7. **Global_Expansion_Glossary_v1**: Semantic Single Source of Truth (SSOT). It defines the business logic and impact of every indicator used in the final risk triangulation.
