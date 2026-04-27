@@ -48,5 +48,20 @@ if __name__ == "__main__":
     # Ejecución del módulo de exploración
     df_exploracion = fetch_preliminary_data()
     
-    # El objeto df_exploracion queda disponible en memoria para ser inspeccionado 
-    # mediante el 'Data Viewer' de VS Code o la Ventana Interactiva.
+    if not df_exploracion.empty:
+        import dtale
+        logging.info("Abriendo D-Tale en el navegador para visualización interactiva...")
+        # dtale.show crea un servidor local y open_browser abre la interfaz automáticamente
+        d = dtale.show(df_exploracion)
+        d.open_browser()
+        
+        # Mantenemos el proceso vivo sin depender de input() para que funcione con el botón "Play"
+        import time
+        logging.info("Servidor D-Tale activo. Presiona el botón de 'Stop' o Ctrl+C para detenerlo.")
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            logging.info("Cerrando servidor D-Tale...")
+    else:
+        logging.warning("No se obtuvieron datos para visualizar.")

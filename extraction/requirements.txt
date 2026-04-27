@@ -31,3 +31,8 @@ pydantic
 # Sistema de registro que permite documentar el flujo de ejecución, 
 # facilitando el monitoreo preventivo y la depuración de errores en producción.
 logging
+
+# --- Exploración y Visualización de Datos ---
+# Librería para la visualización gráfica e interactiva de DataFrames 
+# de pandas durante la fase exploratoria y pruebas locales.
+dtale

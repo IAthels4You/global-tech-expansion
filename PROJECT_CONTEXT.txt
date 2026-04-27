@@ -2,7 +2,7 @@
 # ==========================================
 # Role: Analytics Engineer (Personal Project)
 # Scope: End-to-End Data Pipeline (ELT)
-# Architecture: Medallion (Bronze, Silver, Gold)
+# Architecture: Medallion (Bronze, Silver, Gold) & Contract-First Design
 
 # 1. TECH STACK & INFRASTRUCTURE
 # ------------------------------
@@ -11,44 +11,68 @@
 # - Transformation: dbt Core (Medallion Architecture).
 # - Ingestion: Python 3.13 (requests, pandas).
 # - Validation: Pydantic (Data Contracts).
-# - Environment: Isolated .venv (Virtual Environment).
+# - Environment: Isolated .venv (Virtual Environment), python-dotenv for secrets.
 
 # 2. REPOSITORY STRUCTURE
 # ------------------------
 # global-tech-expansion/
-# ├── extraction/           # PHASE I: Python Ingestion
-# │   ├── connectors/       # API Logic (World Bank, UNESCO, OECD)
-# │   ├── utils.py          # Data Contracts & Validations (Pydantic)
-# │   └── requirements.txt  # Python dependencies
-# ├── dbt_project/         # PHASE III & IV: Transformation
-# │   ├── models/           # Medallion layers (Staging, Intermediate, Marts)
-# │   └── snapshots/        # History capture (SCD Type 2)
-# └── .github/workflows/    # CI/CD Automation
+# ├── .github/
+# │   └── workflows/          # CI/CD automation for testing and deployment
+# ├── extraction/             # Ingestion Module (Phase I)
+# │   ├── connectors/         # Modular API logic
+# │   │   ├── world_bank.py   
+# │   │   ├── unesco.py       
+# │   │   └── oecd.py     
+# │   ├── main.py             # Orchestrator
+# │   ├── requirements.txt    # Python dependencies
+# │   └── utils.py            # Data Contracts & Validations (Pydantic)
+# ├── dbt_project/            # Transformation Module (Phases III & IV)
+# │   ├── models/             # Medallion Architecture implementation
+# │   │   ├── staging/        # Bronze: Initial cleaning and typing
+# │   │   ├── intermediate/   # Silver: Joins and business logic
+# │   │   └── marts/          # Gold: OBT models for BI
+# │   ├── snapshots/          # History capture (SCD Type 2)
+# │   ├── tests/              # SQL data quality audits
+# │   └── dbt_project.yml     # Central dbt configuration
+# ├── docs/                   # Technical Documentation Stack (PDF)
+# ├── .gitignore              # Project exclusion rules
+# └── README.md               # Technical overview
 
-# 3. IMPLEMENTATION PHASES
-# ------------------------
-# PHASE I: Ingestion & Validation (Current)
-# - Exploration of World Bank API data.
-# - Definition of Data Contracts with Pydantic.
-# - Modular Python scripts for extraction.
+# 3. IMPLEMENTATION PHASES (PRACTICAL GUIDE)
+# ------------------------------------------
 
-# PHASE II: Cloud Infrastructure (Snowflake)
-# - Setup of Database: GLOBAL_EXPANSION.
-# - Setup of Schemas: RAW (Bronze), TRANSFORM (Silver), ANALYTICS (Gold).
+# PHASE I: Ingestion & Local Validation (Python)
+# [ ] 1. Setup Environment: Ensure `.venv` is active and dependencies are installed. Create `.env` for secrets (`python-dotenv`).
+# [ ] 2. Explore APIs: Make test requests to World Bank, UNESCO, and OECD APIs to analyze raw JSON structures.
+# [ ] 3. Define Data Contracts: Based on exploration, define Pydantic schemas in `extraction/utils.py` (e.g., enforce ISO 3166-1 Alpha-3, data types).
+# [ ] 4. Build Connectors (`extraction/connectors/`):
+#     - World Bank: GDP PPP (NY.GDP.PCAP.PP.CD), Inflation (FP.CPI.TOTL.ZG), Population (SP.POP.TOTL), Broadband (IT.NET.BBND.P2).
+#     - UNESCO: STEM Grads (FOSGP.5T8.F500600700), R&D % GDP (EXPGDP.TOT). *Header*: `Accept-Encoding: gzip`.
+#     - OECD: Wages (DSD_EARNINGS@AV_AN_WAGE), Tax Wedge (DSD_TAX_WAGES_COMP@DF_TW_COMP). *Header*: `Accept: ...vnd.sdmx.data+json...`.
+# [ ] 5. Clean & Format: Use Pandas/Numpy to structure the data locally and pass it through Pydantic validators.
 
-# PHASE III: dbt Modeling & Governance
-# - Standardization to ISO 3166-1 Alpha-3.
-# - Implementation of dbt Snapshots and automated tests.
+# PHASE II: Cloud Infrastructure & Data Loading (Snowflake FinOps)
+# [ ] 1. Provision Warehouse: Create X-Small warehouse with 60-second auto-suspend.
+# [ ] 2. Provision Storage: Create database `GLOBAL_EXPANSION` and schemas `LANDING` (Bronze), `TRANSFORM` (Silver), `MART` (Gold).
+# [ ] 3. Service Account: Setup roles, users, and permissions for Python and dbt access.
+# [ ] 4. Bulk Load (Ingestion to Cloud): Use `snowflake-connector-python[pandas]` (`write_pandas`) to load validated DataFrames into the `LANDING` schema.
 
-# PHASE IV: OBT & Visualization
-# - Final Table: fct_global_tech_matrix (One Big Table).
-# - Metrics: Weighted Score (Stability, Talent, Cost).
+# PHASE III: Transformation & Governance (dbt Core)
+# [ ] 1. dbt Initialization: Setup `dbt_project.yml` and configure connection to Snowflake (`profiles.yml`).
+# [ ] 2. Source Definition: Define Snowflake `LANDING` tables as sources in dbt.
+# [ ] 3. Snapshots (SCD Type 2): Implement `dbt snapshots` on raw risk/wage data to capture historical changes over time.
+# [ ] 4. Staging Models (Bronze -> Silver): Clean, cast types, and standardize country codes (ISO 3166-1 Alpha-3) and education levels (ISCED).
+# [ ] 5. Intermediate Models (Silver): Calculate complex business logic (Tax Wedge real cost, Cost Arbitrage, Inflation Volatility).
+# [ ] 6. Governance: Add `dbt expectations` and generic tests (unique, not_null, accepted_values) to ensure data integrity.
 
-# PHASE V: Forecasting (Snowpark)
-# - GDP & Inflation projections using Python in Snowflake.
+# PHASE IV: Analytics & Visualization (Gold)
+# [ ] 1. Build OBT (One Big Table): Create `fct_global_tech_matrix` joining Silver models to eliminate BI-layer joins.
+# [ ] 2. Metric Calculation: Compute the "Weighted Score" directly in the OBT (40% Stability, 40% Talent, 20% Cost).
+# [ ] 3. Data Catalog: Run `dbt docs generate` to document lineage and column descriptions.
+# [ ] 4. Executive Dashboard: Connect BI tool to `MART.fct_global_tech_matrix` to visualize talent vs. cost dispersion quadrants.
 
-# 4. KEY KPIs
-# -----------
-# - Global Expansion Opportunity Index.
-# - Talent/Cost Ratio.
-# - Macroeconomic Stability & Devaluation Trends.
+# PHASE V: Predictive AI (Snowpark)
+# [ ] 1. Setup Snowpark: Configure Snowflake environment to execute Python natively.
+# [ ] 2. Time-Series Forecasting: Implement `Prophet` to predict Economic Stability and STEM grads 10-20 years ahead.
+# [ ] 3. Clustering: Implement `scikit-learn` (K-Means/Agglomerative) to group emerging talent hubs based on growth trajectories.
+# [ ] 4. CI/CD Automation: Finalize GitHub Actions workflows to automate the entire ELT and ML pipeline.
