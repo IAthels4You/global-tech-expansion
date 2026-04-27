@@ -1,49 +1,54 @@
-PROJECT CONTEXT: GLOBAL TECH HUB EXPANSION
-==========================================
-Role: Senior Analytics Engineer
-Objective: Automate a professional E2E data pipeline to calculate the "Global Expansion Opportunity Index".
+# PROJECT CONTEXT: GLOBAL TECH HUB EXPANSION
+# ==========================================
+# Role: Analytics Engineer (Personal Project)
+# Scope: End-to-End Data Pipeline (ELT)
+# Architecture: Medallion (Bronze, Silver, Gold)
 
-1. TECH STACK
--------------
-- Data Warehouse: Snowflake (FinOps optimized).
-- Orchestration: GitHub Actions (CI/CD).
-- Transformation: dbt Core (Medallion Architecture).
-- Languages: Python & SQL.
-- Data Source: World Bank API (GDP & Inflation) + Talent/Salary Benchmarks.
+# 1. TECH STACK & INFRASTRUCTURE
+# ------------------------------
+# - Data Warehouse: Snowflake (FinOps optimized: X-Small, 60s auto-suspend).
+# - Orchestration: GitHub Actions (CI/CD).
+# - Transformation: dbt Core (Medallion Architecture).
+# - Ingestion: Python 3.13 (requests, pandas).
+# - Validation: Pydantic (Data Contracts).
+# - Environment: Isolated .venv (Virtual Environment).
 
-2. DATA ARCHITECTURE (MEDALLION)
---------------------------------
-- RAW (Bronze): Landing zone for raw API data (JSON/CSV).
-- TRANSFORM (Silver): Staging, Data Contracts (Pydantic), and Intermediate models.
-- ANALYTICS (Gold): Final OBT (One Big Table) for BI consumption.
+# 2. REPOSITORY STRUCTURE
+# ------------------------
+# global-tech-expansion/
+# ├── extraction/           # PHASE I: Python Ingestion
+# │   ├── connectors/       # API Logic (World Bank, UNESCO, OECD)
+# │   ├── utils.py          # Data Contracts & Validations (Pydantic)
+# │   └── requirements.txt  # Python dependencies
+# ├── dbt_project/         # PHASE III & IV: Transformation
+# │   ├── models/           # Medallion layers (Staging, Intermediate, Marts)
+# │   └── snapshots/        # History capture (SCD Type 2)
+# └── .github/workflows/    # CI/CD Automation
 
-3. IMPLEMENTATION PHASES
-------------------------
-PHASE I: Ingestion & Validation
-- Automate Python scripts for World Bank API.
-- Implement Data Contracts with Pydantic.
-- Setup GitHub Actions for CI/CD.
+# 3. IMPLEMENTATION PHASES
+# ------------------------
+# PHASE I: Ingestion & Validation (Current)
+# - Exploration of World Bank API data.
+# - Definition of Data Contracts with Pydantic.
+# - Modular Python scripts for extraction.
 
-PHASE II: Cloud Infrastructure (Snowflake)
-- Setup Database: GLOBAL_EXPANSION.
-- Setup Schemas: RAW, TRANSFORM, ANALYTICS.
-- Setup Warehouse: X-SMALL with 60s auto-suspend (FinOps).
+# PHASE II: Cloud Infrastructure (Snowflake)
+# - Setup of Database: GLOBAL_EXPANSION.
+# - Setup of Schemas: RAW (Bronze), TRANSFORM (Silver), ANALYTICS (Gold).
 
-PHASE III: dbt Modeling & Governance
-- ISO 3166-1 Alpha-3 standardization.
-- Implementation of dbt Snapshots (SCD Type 2) for historical tracking.
-- Automated dbt tests (Uniqueness, Not Null, Singular tests).
+# PHASE III: dbt Modeling & Governance
+# - Standardization to ISO 3166-1 Alpha-3.
+# - Implementation of dbt Snapshots and automated tests.
 
-PHASE IV: OBT & Visualization
-- Table: fct_global_tech_matrix (Denormalized).
-- Metrics: Weighted Score (40% Stability, 40% Talent, 20% Cost).
+# PHASE IV: OBT & Visualization
+# - Final Table: fct_global_tech_matrix (One Big Table).
+# - Metrics: Weighted Score (Stability, Talent, Cost).
 
-PHASE V: Forecasting (Snowpark)
-- Use Snowpark Python for GDP/Inflation projections (Prophet).
-- Talent growth forecasting (10-20 years horizon).
+# PHASE V: Forecasting (Snowpark)
+# - GDP & Inflation projections using Python in Snowflake.
 
-4. KEY KPIs
------------
-- Global Expansion Opportunity Index.
-- Talent/Cost Ratio.
-- Political Stability & Devaluation Trends.
+# 4. KEY KPIs
+# -----------
+# - Global Expansion Opportunity Index.
+# - Talent/Cost Ratio.
+# - Macroeconomic Stability & Devaluation Trends.

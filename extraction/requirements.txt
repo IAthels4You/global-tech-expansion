@@ -1,14 +1,33 @@
-# --- Manipulación de Datos ---
+# =============================================================================
+# DEPENDENCIAS DEL PROYECTO - FASE I (EXTRACCIÓN)
+# =============================================================================
+
+# --- Manipulación y Estructuración de Datos ---
+# Utilizado para la limpieza, normalización de JSON y creación de DataFrames 
+# que posteriormente serán cargados en el Data Warehouse.
 pandas
 
-# --- Conexión a APIs (Banco Mundial) ---
+# --- Protocolos de Comunicación HTTP ---
+# Librería estándar para gestionar peticiones a la API del Banco Mundial, 
+# permitiendo el manejo de respuestas, headers y errores de red.
 requests
 
-# --- Conectividad con Snowflake ---
+# --- Conectividad con el Data Warehouse (Snowflake) ---
+# Conector oficial para establecer la comunicación con Snowflake. 
+# La extensión [pandas] optimiza la carga masiva de datos mediante el método write_pandas.
 snowflake-connector-python[pandas]
 
-# --- Gestión de Variables de Entorno (Seguridad) ---
+# --- Seguridad y Configuración de Entorno ---
+# Permite la carga de variables de entorno desde archivos .env, asegurando 
+# que las credenciales de acceso no queden expuestas en el código fuente.
 python-dotenv
 
-# --- Validación (Opcional pero recomendado para Data Contracts) ---
+# --- Validación de Integridad y Data Contracts ---
+# Empleado para construir esquemas de validación robustos que aseguran que 
+# los datos entrantes cumplan con los tipos y rangos definidos por el negocio.
 pydantic
+
+# --- Trazabilidad y Diagnóstico de Ejecución ---
+# Sistema de registro que permite documentar el flujo de ejecución, 
+# facilitando el monitoreo preventivo y la depuración de errores en producción.
+logging
