@@ -29,3 +29,4 @@ logs/
 # --- Scripts y archivos de texto locales ---
 read_pdf.py
 pdf_out.txt
+temp_pdf.txt
