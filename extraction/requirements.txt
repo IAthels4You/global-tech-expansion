@@ -27,6 +27,10 @@ python-dotenv
 # los datos entrantes cumplan con los tipos y rangos definidos por el negocio.
 pydantic
 
+# Librería para la validación estandarizada de países mediante códigos ISO 3166.
+# Fundamental para filtrar agregados regionales durante la limpieza de datos.
+pycountry
+
 # --- Trazabilidad y Diagnóstico de Ejecución ---
 # Sistema de registro que permite documentar el flujo de ejecución, 
 # facilitando el monitoreo preventivo y la depuración de errores en producción.
