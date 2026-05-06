@@ -1,6 +1,6 @@
 import pycountry
-from pydantic import BaseModel, Field, field_validator
-from typing import Optional
+from pydantic import BaseModel, Field, field_validator, model_validator
+from typing import Optional, Any
 
 def validate_iso_alpha3(country_code: str) -> str:
     """
@@ -35,10 +35,27 @@ class WorldBankRecord(BaseModel):
     """
     Data Contract principal para la ingesta del Banco Mundial.
     Estandariza los campos y aplica estrictamente la validación ISO 3166-1.
+    Calcula dinámicamente el valor aplicando el escalado decimal.
     """
     country_code: str = Field(alias="countryiso3code")
     year: str = Field(alias="date")
     indicator_value: Optional[float] = Field(alias="value", default=None)
+
+    @model_validator(mode='before')
+    @classmethod
+    def apply_decimal_scaling(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            value = data.get('value')
+            decimal = data.get('decimal')
+            
+            if value is not None and decimal is not None:
+                try:
+                    v = float(value)
+                    d = int(decimal)
+                    data['value'] = v * (10 ** -d)
+                except (ValueError, TypeError):
+                    pass
+        return data
 
     @field_validator("country_code")
     @classmethod
@@ -54,6 +71,22 @@ class UnescoRecord(BaseModel):
     country_code: str = Field(alias="geoUnit")
     year: int = Field()
     indicator_value: Optional[float] = Field(alias="value", default=None)
+
+    @field_validator("country_code")
+    @classmethod
+    def check_country_code(cls, v: str) -> str:
+        return validate_iso_alpha3(v)
+
+class OecdRecord(BaseModel):
+    """
+    Data Contract para la ingesta de OECD.
+    Descarta dimensiones excedentes y estandariza a cinco columnas.
+    """
+    country_code: str = Field(alias="REF_AREA")
+    year: str = Field(alias="TIME_PERIOD")
+    indicator_value: Optional[float] = Field(alias="value", default=None)
+    unit: str = Field(alias="UNIT_MEASURE")
+    indicator_name: str = Field()
 
     @field_validator("country_code")
     @classmethod
